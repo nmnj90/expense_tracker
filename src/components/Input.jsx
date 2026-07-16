@@ -1,4 +1,12 @@
-export default function Input({ label, type, id, name, ref, defaultValue }) {
+export default function Input({
+  label,
+  type,
+  id,
+  name,
+  ref,
+  defaultValue,
+  error,
+}) {
   let input = null;
   if (name === 'typeOfExpense') {
     input = (
@@ -34,6 +42,7 @@ export default function Input({ label, type, id, name, ref, defaultValue }) {
     <div className='form-field-wrapper'>
       <label className='form-label' htmlFor={id}>{label}</label>
       {input}
+      {error ? <p className='form-error'>{error}</p> : null}
     </div>
   );
 }
