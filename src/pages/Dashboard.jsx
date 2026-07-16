@@ -37,6 +37,7 @@ export default function Dashboard() {
       </Modal>
       <Modal type='update' ref={updateModalRef}>
         <Form
+          key={selectedExpenseId}
           type='update'
           id={selectedExpenseId}
           onClose={() => updateModalRef.current.close()}

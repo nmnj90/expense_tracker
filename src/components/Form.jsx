@@ -9,6 +9,11 @@ export default function Form({ type, onClose, id }) {
   const typeOfExpenseRef = useRef();
   const expenseContext = useContext(ExpenseContext);
 
+  const expenseToUpdate =
+    type === 'update'
+      ? expenseContext.expenses.find((expense) => expense.id === id)
+      : null;
+
   function onSubmitHandler(e) {
     e.preventDefault();
     if (type === 'update') {
@@ -33,10 +38,38 @@ export default function Form({ type, onClose, id }) {
 
   return (
     <form className='form' onSubmit={onSubmitHandler}>
-      <Input ref={titleRef} label='Title' type='text' id='title' name='title' />
-      <Input ref={amountRef} label='Amount' type='number' id='amount' name='amount' />
-      <Input ref={dateRef} label='Date' type='date' id='date' name='date' />
-      <Input ref={typeOfExpenseRef} label='Type of Expense' type='select' id='typeOfExpense' name='typeOfExpense' />
+      <Input
+        ref={titleRef}
+        label='Title'
+        type='text'
+        id={`${type}-title`}
+        name='title'
+        defaultValue={expenseToUpdate?.title}
+      />
+      <Input
+        ref={amountRef}
+        label='Amount'
+        type='number'
+        id={`${type}-amount`}
+        name='amount'
+        defaultValue={expenseToUpdate?.amount}
+      />
+      <Input
+        ref={dateRef}
+        label='Date'
+        type='date'
+        id={`${type}-date`}
+        name='date'
+        defaultValue={expenseToUpdate?.date}
+      />
+      <Input
+        ref={typeOfExpenseRef}
+        label='Type of Expense'
+        type='select'
+        id={`${type}-typeOfExpense`}
+        name='typeOfExpense'
+        defaultValue={expenseToUpdate?.typeOfExpense}
+      />
       <button type='submit'>Submit</button>
     </form>
   );
