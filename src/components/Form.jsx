@@ -1,10 +1,13 @@
 import { useRef, useContext, useState } from 'react';
 import Input from './Input';
+import Select from './Select';
+import CurrencySelect from './CurrencySelect';
 import ExpenseContext from '../context/expenseContext';
 
 export default function Form({ type, onClose, id }) {
   const titleRef = useRef();
   const amountRef = useRef();
+  const currencyRef = useRef();
   const dateRef = useRef();
   const typeOfExpenseRef = useRef();
   const expenseContext = useContext(ExpenseContext);
@@ -15,10 +18,16 @@ export default function Form({ type, onClose, id }) {
       ? expenseContext.expenses.find((expense) => expense.id === id)
       : null;
 
+  const transactionType =
+    type === 'update'
+      ? expenseToUpdate?.type?.type || 'cost'
+      : type;
+
   function onSubmitHandler(e) {
     e.preventDefault();
     const title = titleRef.current.value.trim();
     const amount = Number(amountRef.current.value);
+    const currency = currencyRef.current.value;
     const date = dateRef.current.value;
     const typeOfExpense = typeOfExpenseRef.current.value;
     const nextErrors = {};
@@ -44,6 +53,7 @@ export default function Form({ type, onClose, id }) {
       expenseContext.updateExpense(id, {
         title,
         amount,
+        currency,
         date,
         typeOfExpense,
       });
@@ -52,6 +62,7 @@ export default function Form({ type, onClose, id }) {
         id: Math.random().toString(),
         title,
         amount,
+        currency,
         date,
         typeOfExpense,
         type: { type },
@@ -71,15 +82,22 @@ export default function Form({ type, onClose, id }) {
         defaultValue={expenseToUpdate?.title}
         error={errors.title}
       />
-      <Input
-        ref={amountRef}
-        label='Amount'
-        type='number'
-        id={`${type}-amount`}
-        name='amount'
-        defaultValue={expenseToUpdate?.amount}
-        error={errors.amount}
-      />
+      <div className='form-row'>
+        <Input
+          ref={amountRef}
+          label='Amount'
+          type='number'
+          id={`${type}-amount`}
+          name='amount'
+          defaultValue={expenseToUpdate?.amount}
+          error={errors.amount}
+        />
+        <CurrencySelect
+          ref={currencyRef}
+          id={`${type}-currency`}
+          defaultValue={expenseToUpdate?.currency || 'RSD'}
+        />
+      </div>
       <Input
         ref={dateRef}
         label='Date'
@@ -89,12 +107,12 @@ export default function Form({ type, onClose, id }) {
         defaultValue={expenseToUpdate?.date}
         error={errors.date}
       />
-      <Input
+      <Select
         ref={typeOfExpenseRef}
-        label='Type of Expense'
-        type='select'
+        label={transactionType === 'income' ? 'Type of Income' : 'Type of Expense'}
         id={`${type}-typeOfExpense`}
         name='typeOfExpense'
+        transactionType={transactionType}
         defaultValue={expenseToUpdate?.typeOfExpense}
       />
       <button type='submit'>Submit</button>

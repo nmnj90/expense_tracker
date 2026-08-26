@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 
 const ExpenseContext = createContext({
-  totalAmount: 0,
+  totalAmount: {},
   expenses: [],
   addExpense: (expense) => {},
   removeExpense: (id) => {},
