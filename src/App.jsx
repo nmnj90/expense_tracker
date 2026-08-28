@@ -1,74 +1,52 @@
-import { useState, useEffect } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { useContext } from 'react';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import AuthContext, { AuthProvider } from './context/authContext';
+import ExpenseProvider from './context/ExpenseProvider';
+import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
-import ExpenseContext from './context/expenseContext';
 
-function getInitialExpenses() {
-  const savedExpenses = localStorage.getItem('expenses');
-  if (!savedExpenses) {
-    return [];
-  }
-
-  try {
-    return JSON.parse(savedExpenses);
-  } catch {
-    return [];
-  }
+function AuthLoading() {
+  return (
+    <div className='auth-page'>
+      <p className='auth-loading'>Loading account...</p>
+    </div>
+  );
 }
 
-function App() {
-  const [expensesList, setExpensesList] = useState(getInitialExpenses);
+function AuthenticatedApp() {
+  const { currentUser, isReady } = useContext(AuthContext);
 
-  useEffect(() => {
-    localStorage.setItem('expenses', JSON.stringify(expensesList));
-  }, [expensesList]);
-
-  function addExpenseHandler(expense) {
-    setExpensesList((prevExpenses) => [...prevExpenses, expense]);
+  if (!isReady) {
+    return <AuthLoading />;
   }
 
-  function removeExpenseHandler(id) {
-    setExpensesList((prevExpenses) =>
-      prevExpenses.filter((expense) => expense.id !== id),
-    );
+  if (!currentUser) {
+    return <Navigate to='/auth' replace />;
   }
-
-  function updateExpenseHandler(id, updatedExpense) {
-    setExpensesList((prevExpenses) =>
-      prevExpenses.map((expense) =>
-        expense.id === id ? { ...expense, ...updatedExpense } : expense,
-      ),
-    );
-  }
-
-  const totalsByCurrency = expensesList.reduce((totals, expense) => {
-    const currency = expense.currency || 'RSD';
-    const amount = Number(expense.amount) || 0;
-    const signedAmount = expense.type?.type === 'cost' ? -amount : amount;
-
-    totals[currency] = (totals[currency] || 0) + signedAmount;
-    return totals;
-  }, {});
-
-  const expenseContext = {
-    totalAmount: totalsByCurrency,
-    expenses: expensesList,
-    addExpense: addExpenseHandler,
-    removeExpense: removeExpenseHandler,
-    updateExpense: updateExpenseHandler,
-  };
-
-  const router = createBrowserRouter([
-    {
-      path: '/',
-      element: <Dashboard />,
-    },
-  ]);
 
   return (
-    <ExpenseContext.Provider value={expenseContext}>
+    <ExpenseProvider key={currentUser.id} accountId={currentUser.id}>
+      <Dashboard />
+    </ExpenseProvider>
+  );
+}
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <AuthenticatedApp />,
+  },
+  {
+    path: '/auth',
+    element: <Auth />,
+  },
+]);
+
+function App() {
+  return (
+    <AuthProvider>
       <RouterProvider router={router} />
-    </ExpenseContext.Provider>
+    </AuthProvider>
   );
 }
 

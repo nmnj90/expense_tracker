@@ -1,11 +1,13 @@
 import { useContext, useRef, useState } from 'react';
 import Form from '../components/Form';
+import AuthContext from '../context/authContext';
 import ExpenseContext from '../context/expenseContext';
 import Modal from '../components/Modal';
 import { ICONS } from '../components/Select';
 import { formatMoney } from '../utils/currency';
 
 export default function Dashboard() {
+  const { currentUser, logout } = useContext(AuthContext);
   const expenseContext = useContext(ExpenseContext);
   const costModalRef = useRef();
   const incomeModalRef = useRef();
@@ -22,6 +24,15 @@ export default function Dashboard() {
 
   return (
     <div className='dashboard'>
+      <div className='dashboard__account'>
+        <p className='dashboard__account-name'>
+          {currentUser.name}
+          <span>{currentUser.email}</span>
+        </p>
+        <button className='btn btn--ghost' type='button' onClick={logout}>
+          Log out
+        </button>
+      </div>
       <header className='dashboard__header'>
         <div>
           <h1 className='dashboard__title'>Expense Tracker</h1>
@@ -49,6 +60,12 @@ export default function Dashboard() {
       </header>
 
       <div className='expense-list'>
+        {expenseContext.expenses.length === 0 ? (
+          <div className='expense-empty'>
+            <h2>No transactions yet</h2>
+            <p>Add a cost or income to start tracking this account.</p>
+          </div>
+        ) : null}
         {expenseContext.expenses.map((expense) => (
           <div className='expense-item' key={expense.id}>
             <div>

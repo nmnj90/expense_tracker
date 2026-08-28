@@ -6,6 +6,7 @@ export default function Input({
   ref,
   defaultValue,
   error,
+  autoComplete,
 }) {
   return (
     <div className='form-field-wrapper'>
@@ -17,6 +18,7 @@ export default function Input({
         type={type}
         ref={ref}
         defaultValue={defaultValue}
+        autoComplete={autoComplete}
       />
       {error ? <p className='form-error'>{error}</p> : null}
     </div>
