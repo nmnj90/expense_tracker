@@ -1,8 +1,10 @@
 import { createPortal } from 'react-dom';
 
-export default function Modal({ type, children, ref }) {
+export default function Modal({ type, tone, children, ref }) {
+  const variant = tone || type;
+
   return createPortal(
-    <dialog className='modal' ref={ref}>
+    <dialog className={`modal modal--${variant}`} ref={ref}>
       <h1>{type}</h1>
       {children}
       <form method='dialog'>

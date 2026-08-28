@@ -4,14 +4,16 @@ export const CURRENCIES = [
   { value: 'USD', label: 'USD', symbol: '$' },
 ];
 
-export function formatMoney(amount, currency = 'RSD') {
+export function formatMoney(amount, currency = 'RSD', { signed = false } = {}) {
   try {
     return new Intl.NumberFormat('sr-RS', {
       style: 'currency',
       currency,
       maximumFractionDigits: 2,
+      signDisplay: signed ? 'exceptZero' : 'auto',
     }).format(Number(amount) || 0);
   } catch {
-    return `${Number(amount) || 0} ${currency}`;
+    const value = Number(amount) || 0;
+    return `${value} ${currency}`;
   }
 }
