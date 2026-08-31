@@ -276,6 +276,245 @@ select {
   color: var(--text);
 }
 
+.btn--ghost.is-active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: #c4d7de;
+}
+
+.dashboard__section-title {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.stats {
+  margin-bottom: 2.25rem;
+}
+
+.stats__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stats__header .dashboard__section-title {
+  margin: 0;
+}
+
+.stats__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.stats__ranges {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.stats__currency {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 7.5rem;
+}
+
+.stats__currency .form-input {
+  padding: 0.45rem 0.7rem;
+}
+
+.stats__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+
+.stats-card {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1rem 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.stats-card p,
+.stats-card span {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+}
+
+.stats-card strong {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.stats-card--cost {
+  border-top: 3px solid var(--cost);
+}
+
+.stats-card--cost strong {
+  color: var(--cost);
+}
+
+.stats-card--income {
+  border-top: 3px solid var(--income);
+}
+
+.stats-card--income strong {
+  color: var(--income);
+}
+
+.stats-card--balance.is-positive strong {
+  color: var(--income);
+}
+
+.stats-card--balance.is-negative strong {
+  color: var(--cost);
+}
+
+.stats__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 0.85rem;
+}
+
+.stats-panel {
+  padding: 1.1rem 1.2rem 1.2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.stats-panel h3 {
+  margin: 0 0 0.85rem;
+  font-size: 0.98rem;
+}
+
+.stats-panel__empty {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.stats-panel__body {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.stats-panel__chart {
+  min-width: 0;
+}
+
+.stats-panel__chart--bar {
+  height: 220px;
+}
+
+.stats-breakdown {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.stats-breakdown li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px 48px;
+  grid-template-areas:
+    'label amount percent'
+    'bar bar bar';
+  gap: 0.2rem 0.65rem;
+  align-items: center;
+}
+
+.stats-breakdown__label {
+  grid-area: label;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.stats-breakdown__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.stats-breakdown__icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.stats-breakdown strong {
+  grid-area: amount;
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.stats-breakdown__percent {
+  grid-area: percent;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  text-align: right;
+}
+
+.stats-breakdown__bar {
+  grid-area: bar;
+  display: block;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  overflow: hidden;
+}
+
+.stats-breakdown__bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.stats-tooltip {
+  padding: 0.55rem 0.7rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.stats-tooltip p {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.stats-tooltip span {
+  color: var(--text-muted);
+}
+
+@media (max-width: 860px) {
+  .stats__cards,
+  .stats__grid,
+  .stats-panel__body {
+    grid-template-columns: 1fr;
+  }
+}
+
 .expense-list {
   display: grid;
   gap: 0.85rem;

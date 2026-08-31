@@ -1,5 +1,6 @@
 import { useContext, useRef, useState } from 'react';
 import Form from '../components/Form';
+import Statistics from '../components/Statistics';
 import AuthContext from '../context/authContext';
 import ExpenseContext from '../context/expenseContext';
 import Modal from '../components/Modal';
@@ -74,6 +75,10 @@ export default function Dashboard() {
           </button>
         </div>
       </header>
+
+      <Statistics expenses={expenseContext.expenses} />
+
+      <h2 className='dashboard__section-title'>Transactions</h2>
 
       <div className='expense-list'>
         {expenseContext.expenses.length === 0 ? (
