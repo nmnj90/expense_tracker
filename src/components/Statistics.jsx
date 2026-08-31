@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -31,13 +31,38 @@ function MoneyTooltip({ active, payload, currency }) {
   );
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const root = document.getElementById('app') || document.getElementById('root');
+    if (!root || typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width || 0;
+      setIsMobile(width <= 768);
+    });
+
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, []);
+
+  return isMobile;
+}
+
 export default function Statistics({ expenses }) {
   const [range, setRange] = useState('all');
   const [currency, setCurrency] = useState('RSD');
+  const isMobile = useIsMobile();
   const stats = useMemo(
     () => buildStats(expenses, { currency, range }),
     [expenses, currency, range],
   );
+  const pieInner = isMobile ? 42 : 58;
+  const pieOuter = isMobile ? 68 : 88;
+  const chartHeight = isMobile ? 180 : 220;
 
   return (
     <section className='stats' aria-labelledby='stats-title'>
@@ -109,14 +134,14 @@ export default function Statistics({ expenses }) {
           ) : (
             <div className='stats-panel__body'>
               <div className='stats-panel__chart'>
-                <ResponsiveContainer width='100%' height={220}>
+                <ResponsiveContainer width='100%' height={chartHeight}>
                   <PieChart>
                     <Pie
                       data={stats.categories}
                       dataKey='value'
                       nameKey='name'
-                      innerRadius={58}
-                      outerRadius={88}
+                      innerRadius={pieInner}
+                      outerRadius={pieOuter}
                       paddingAngle={2}
                     >
                       {stats.categories.map((category) => (
@@ -163,13 +188,16 @@ export default function Statistics({ expenses }) {
         <article className='stats-panel'>
           <h3>Last 6 months</h3>
           <div className='stats-panel__chart stats-panel__chart--bar'>
-            <ResponsiveContainer width='100%' height={220}>
-              <BarChart data={stats.months}>
+            <ResponsiveContainer width='100%' height={chartHeight}>
+              <BarChart
+                data={stats.months}
+                margin={{ top: 8, right: 8, left: isMobile ? -12 : 0, bottom: 0 }}
+              >
                 <XAxis dataKey='label' tickLine={false} axisLine={false} />
                 <YAxis
                   tickLine={false}
                   axisLine={false}
-                  width={56}
+                  width={isMobile ? 32 : 56}
                   tickFormatter={(value) =>
                     new Intl.NumberFormat('sr-RS', {
                       notation: 'compact',
